@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+}
+
+@media (max-width: 640px) {
+  a.active {
+    color: white;
+    background: black;
+  }
+}
+@media (max-width: 768px) {
+  a.active {
+    color: white;
+    background: black;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
