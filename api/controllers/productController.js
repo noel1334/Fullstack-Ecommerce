@@ -38,7 +38,7 @@ export const createProduct = async (req, res) => {
     const images = req.files?.image 
       ? req.files.image.map(file => path.join('uploads', file.filename).replace(/\\/g, '/')) 
       : [];
-    console.log('Uploaded Images:', images);
+    // console.log('Uploaded Images:', images);
 
     if (!mongoose.Types.ObjectId.isValid(category)) {
       return res.status(400).json({ message: 'Invalid category ID' });
