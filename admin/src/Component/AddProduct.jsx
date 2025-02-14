@@ -22,6 +22,7 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Fetch categories and subcategories from the backend
   useEffect(() => {
@@ -105,6 +106,7 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const formData = new FormData();
     Object.entries(formValues).forEach(([key, value]) => {
@@ -170,6 +172,8 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
           position: "bottom-right",
         }
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -393,9 +397,12 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="max-w-max bg-blue-600 text-white p-2 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`max-w-max bg-blue-600 text-white p-2 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            loading && "cursor-not-allowed"
+          }`}
+          disabled={loading}
         >
-          Save Product
+          {loading ? "Saving Product..." : "Save"}
         </button>
       </form>
     </div>

@@ -3,12 +3,19 @@ import Title from "../Component/Title";
 
 const ConfirmPasswordModal = ({ isVisible, onClose, onConfirm }) => {
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (!isVisible) return null;
 
   const handleSubmit = () => {
-    onConfirm(password);
-    setPassword("");
+    setLoading(true);
+    try {
+      onConfirm(password);
+      setPassword("");
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -40,7 +47,7 @@ const ConfirmPasswordModal = ({ isVisible, onClose, onConfirm }) => {
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
-            Confirm
+            {loading ? "Confirming..." : "Confirm"}
           </button>
         </div>
       </div>

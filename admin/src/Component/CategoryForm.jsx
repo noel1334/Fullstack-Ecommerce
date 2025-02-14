@@ -86,7 +86,9 @@ const CategoryForm = ({ onClose, onCategoryAdded, categoryToEdit }) => {
         />
         <button
           type="submit"
-          className="w-full p-2 bg-blue-700 text-white rounded-md hover:bg-blue-800"
+          className={`w-full p-2 bg-blue-700 text-white rounded-md hover:bg-blue-800 ${
+            loading && "cursor-not-allowed"
+          }`}
           disabled={loading}
         >
           {loading ? "Saving..." : "Save"}

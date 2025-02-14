@@ -18,7 +18,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   // Function to close the sidebar on small screens
   const closeSidebar = () => {
     if (window.innerWidth < 640) {
-      setIsOpen(false); // Close the sidebar if the screen width is less than 640px
+      setIsOpen(false);
     }
   };
 
@@ -26,7 +26,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const navItems = [
     { path: "/", icon: <FaTachometerAlt />, label: "Dashboard" },
     { path: "/orders", icon: <FaBox />, label: "Order" },
-    { path: "/products", icon: <FaTh />, label: "Product" },
+    { path: "/products", icon: <FaTh />, label: "Products" },
     { path: "/reports", icon: <FaRegChartBar />, label: "Reports" },
     { path: "/categories", icon: <FaList />, label: "Categories" },
     { path: "/users", icon: <FaUsers />, label: "Users" },
@@ -65,7 +65,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         <li onClick={logout}>
           <button
             className="flex items-center bg-red-600 hover:bg-red-700 px-4 py-2 rounded w-full"
-            onClick={closeSidebar} // Close sidebar on small screens after click
+            onClick={closeSidebar}
           >
             <FiLogOut className="text-xl flex-shrink-0" />
             <span className={`ml-3 ${isOpen ? "block" : "hidden"}`}>

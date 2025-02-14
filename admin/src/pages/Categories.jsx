@@ -9,6 +9,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const Categories = () => {
+  const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categorySearchTerm, setCategorySearchTerm] = useState("");
   const [subcategorySearchTerm, setSubcategorySearchTerm] = useState("");
@@ -31,6 +32,7 @@ const Categories = () => {
     }
   };
   const handleSubCategoriesDelete = async (id) => {
+    setLoading(true);
     try {
       await axiosInstance.delete(`subcategories/delete/${id}`);
       // Re-fetch the latest subcategories
@@ -46,6 +48,8 @@ const Categories = () => {
         err.response?.data || err.message
       );
       // setError(err.message || "Failed to delete subcategory.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -262,6 +266,7 @@ const Categories = () => {
                     <span
                       onClick={() => confirmAndDeleteSub(subcategory._id)}
                       className="bg-red-600 rounded-full p-1 cursor-pointer"
+                      disabled={loading}
                     >
                       <FaTrash />
                     </span>

@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { ShopContext } from "../Context/ShopContext";
-// import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
 import { UserContext } from "../Context/UserContext";
 import axios from "axios";
@@ -16,6 +15,7 @@ const SubcategoryForm = ({
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const { BASE_URL } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (subcategoryToEdit) {
@@ -29,7 +29,7 @@ const SubcategoryForm = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       let response;
       if (subcategoryToEdit) {
@@ -68,6 +68,8 @@ const SubcategoryForm = ({
         position: "bottom-right",
         theme: "dark",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,8 +114,9 @@ const SubcategoryForm = ({
         <button
           type="submit"
           className="w-full p-2 bg-blue-700 text-white rounded-md hover:bg-blue-800"
+          disabled={loading}
         >
-          Save
+          {loading ? "Saving..." : "Save"}
         </button>
       </form>
     </div>
