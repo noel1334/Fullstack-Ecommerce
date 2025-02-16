@@ -21,7 +21,7 @@ const AdminOrders = () => {
   const [paymentMethodFilter, setPaymentMethodFilter] = useState("");
 
   // Set itemsPerPage to 4 for testing purposes
-  const itemsPerPage = 4;
+  const itemsPerPage = 20;
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -254,8 +254,9 @@ const AdminOrders = () => {
                       <td className="py-2 px-3">
                         {order.cartItems?.map((product, index) => (
                           <div key={index} className="text-xs">
-                            {product.name} (x{product.quantity}) - {currency}
-                            {product.price}
+                            {product.name} (x{product.quantity}) -{" "}
+                            {currency + " "}
+                            {product.price.toFixed(2)}
                           </div>
                         ))}
                       </td>
@@ -288,8 +289,8 @@ const AdminOrders = () => {
                       <td className="py-2 px-3">
                         <div>{order.paymentStatus}</div>
                         <div className="font-bold">
-                          {currency}
-                          {order.totalAmount}
+                          {currency + " "}
+                          {order.totalAmount.toFixed(2)}
                         </div>
                       </td>
                       <td className="py-2 px-3">

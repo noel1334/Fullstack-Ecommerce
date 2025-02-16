@@ -11,12 +11,9 @@ import cartRoutes from "./routes/cartRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import paymentRoutes from "./routes/flutterwave.js";
 import errorHandler from "./middleware/errorHandler.js";
-import path from "path";
+// import upload from './middleware/upload.js'; 
 
 dotenv.config();
-
-// Get the current directory name
-const __dirname = new URL(".", import.meta.url).pathname;
 
 // Frontend URLs
 const frontendUrl = process.env.FRONTEND_URL;
@@ -28,20 +25,20 @@ console.log("Frontend URLs allowed by CORS:", frontendUrl, clientUrl);
 // Initialize app
 const app = express();
 
-// Serve static files
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-app.use("/uploads", express.static(path.resolve("./uploads")));
+// Serve static files. This may not be needed anymore.
+// app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+// app.use("/uploads", express.static(path.resolve("./uploads")));
 
 // Middlewares
 app.use(cookieParser());
 app.use(express.json());
 app.use(
-  cors({
-    origin: [frontendUrl, clientUrl],
-    credentials: true,
-    methods: "GET, POST, PUT, DELETE, PATCH",
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
+    cors({
+        origin: [frontendUrl, clientUrl],
+        credentials: true,
+        methods: "GET, POST, PUT, DELETE, PATCH",
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
 );
 
 // Routes
@@ -58,7 +55,18 @@ app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  connectDB();
-});
+
+// Connect to MongoDB
+async function startServer() {
+    try {
+        await connectDB();
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("MongoDB connection error:", error);
+        process.exit(1); // Exit the process if the database connection fails
+    }
+}
+
+startServer(); 

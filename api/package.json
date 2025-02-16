@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "mongoose": "^8.3.2",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.16",
+    "nodemon": "^3.1.9",
     "razorpay": "^2.9.5",
     "stripe": "^17.5.0"
   }

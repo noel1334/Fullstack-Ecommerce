@@ -1,3 +1,4 @@
+// ListProducts.js
 import React, { useContext, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -17,12 +18,12 @@ const ListProducts = () => {
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [productToEdit, setProductToEdit] = useState(null);
-  const { products, handleProductDelete } = useContext(ShopContext);
-
+  const { products, handleProductDelete, isLoading, currency, error } =
+    useContext(ShopContext);
   const listRef = useRef(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4; // Set the number of items per page
+  const itemsPerPage = 20;
 
   const confirmAndDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
@@ -45,14 +46,12 @@ const ListProducts = () => {
     product.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to scroll to top
   const scrollToTop = () => {
     if (listRef.current) {
       listRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
-  // Paginate filtered products
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const paginatedProducts = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
@@ -63,13 +62,28 @@ const ListProducts = () => {
     setCurrentPage(newPage);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white p-2 flex justify-center items-center">
+        <p>Loading products...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white p-2 flex justify-center items-center">
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
+
   return (
     <div ref={listRef} className="min-h-screen bg-gray-900 text-white p-2">
       <div className="pb-4 text-3xl">
         {!showAddProduct && <Title text1={"PRODUCT"} text2={"LIST"} />}
       </div>
 
-      {/* Top Bar */}
       <div className="flex justify-between items-center mb-6">
         <div className="relative w-72">
           <FaSearch className="absolute top-2 left-2 text-gray-500" />
@@ -82,7 +96,6 @@ const ListProducts = () => {
           />
         </div>
 
-        {/* Add Product Button */}
         {!showAddProduct ? (
           <button
             onClick={() => {
@@ -105,7 +118,6 @@ const ListProducts = () => {
         )}
       </div>
 
-      {/* Conditionally render AddProduct component */}
       {showAddProduct && (
         <AddProduct
           productToEdit={productToEdit}
@@ -114,7 +126,6 @@ const ListProducts = () => {
         />
       )}
 
-      {/* Product List */}
       <div className="space-y-4">
         {paginatedProducts.length > 0 ? (
           paginatedProducts.map((product) => (
@@ -139,7 +150,9 @@ const ListProducts = () => {
                 <p className="text-sm text-gray-400">{product.description}</p>
                 <div className="mt-2">
                   <p className="text-gray-400 text-sm">
-                    <strong>Price:</strong> {product.price}
+                    <strong>Price: </strong>
+                    {currency + " "}
+                    {product.price}
                   </p>
                   <p className="text-gray-400 text-sm">
                     <strong>Sizes:</strong> {product.size.join(", ")}
@@ -188,7 +201,6 @@ const ListProducts = () => {
         )}
       </div>
 
-      {/* Pagination */}
       {filteredProducts.length > itemsPerPage && (
         <div className="flex justify-center mt-4">
           {Array.from({ length: totalPages }, (_, index) => (

@@ -288,7 +288,8 @@ const OrderDetail = () => {
                     Size: {item.selectedSize}
                   </div>
                   <div className="text-sm text-gray-400">
-                    Price: ${item.price}
+                    {currency + " "}
+                    {item.price}
                   </div>
                   <div className="text-sm text-gray-400">
                     Color: {item.selectedColor}
@@ -301,8 +302,8 @@ const OrderDetail = () => {
           <div className="font-semibold text-xl mb-2">Total Amount:</div>
           <div className="flex items-center justify-between gap-6">
             <div className="text-2xl font-bold text-green-400">
-              {currency}
-              {order?.totalAmount}
+              {currency + " "}
+              {order?.totalAmount.toFixed(2)}
             </div>
           </div>
 

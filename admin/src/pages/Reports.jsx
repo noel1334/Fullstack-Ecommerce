@@ -14,7 +14,7 @@ const Reports = () => {
   const [endDate, setEndDate] = useState("");
   const [viewMode, setViewMode] = useState("table");
   const [currentPage, setCurrentPage] = useState(1);
-  const reportsPerPage = 5;
+  const reportsPerPage = 15;
 
   const reports = [
     {

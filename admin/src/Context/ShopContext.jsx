@@ -1,10 +1,11 @@
 import React, { createContext, useState, useEffect, useMemo } from "react";
 import axiosInstance from "../utils/axiosInstance";
+import { toast } from "react-toastify";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = ({ children }) => {
-  const currency = "$";
+  const currency = "NGN";
   const delivery_fees = 10;
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -14,8 +15,10 @@ const ShopContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch products, categories, and subcategories
   const fetchProducts = async () => {
+    setIsLoading(true);
+    setError(null); // Clear any previous errors
+
     try {
       const [productsResponse, categoriesResponse, subcategoriesResponse] =
         await Promise.all([
@@ -24,7 +27,6 @@ const ShopContextProvider = ({ children }) => {
           axiosInstance.get("subcategories"),
         ]);
 
-      // Sort products by createdAt in descending order (most recent first)
       const sortedProducts = productsResponse.data
         ? productsResponse.data.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -46,13 +48,17 @@ const ShopContextProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
-  // Function to handle product deletion
   const handleProductDelete = async (id) => {
+    const originalProducts = [...products]; // Store a copy before optimistic update
     const updatedProducts = products.filter((product) => product._id !== id);
     setProducts(updatedProducts);
 
     try {
       await axiosInstance.delete(`products/delete/${id}`);
+      toast.success("Product deleted successfully!", {
+        position: "bottom-right",
+        theme: "dark",
+      });
     } catch (err) {
       console.error(
         "Error deleting product:",
@@ -60,15 +66,17 @@ const ShopContextProvider = ({ children }) => {
       );
       setError(err.message || "Failed to delete product.");
 
-      // Rollback the UI update in case of error
-      setProducts((prevProducts) => [
-        ...prevProducts,
-        products.find((p) => p._id === id),
-      ]);
+      // Rollback the UI update in case of error.  Use a function update to avoid stale state issues.
+      setProducts(() => originalProducts);
+      toast.error("Failed to delete product!", {
+        position: "bottom-right",
+        theme: "dark",
+      });
     }
   };
-  // Function to handle Categories deletion
+
   const handleCategoriesDelete = async (id) => {
+    const originalCategories = [...categories]; // Store a copy before optimistic update
     const updatedCategories = categories.filter(
       (category) => category._id !== id
     );
@@ -76,30 +84,35 @@ const ShopContextProvider = ({ children }) => {
 
     try {
       await axiosInstance.delete(`categories/delete/${id}`);
+      toast.success("Category deleted successfully!", {
+        position: "bottom-right",
+        theme: "dark",
+      });
     } catch (err) {
       console.error(
         "Error deleting product:",
         err.response?.data || err.message
       );
-      setError(err.message || "Failed to delete product.");
+      setError(err.message || "Failed to delete category.");
 
       // Rollback the UI update in case of error
-      setProducts((prevProducts) => [
-        ...prevProducts,
-        products.find((p) => p._id === id),
-      ]);
+      setCategories(() => originalCategories);
+      toast.error("Failed to delete category!", {
+        position: "bottom-right",
+        theme: "dark",
+      });
     }
   };
 
-  // Handle adding a product to the list
   const handleProductAdd = (newProduct) => {
     setProducts((prevProducts) => [newProduct, ...prevProducts]);
-    fetchProducts((fetchedProducts) => {
-      setProducts(fetchedProducts);
+    toast.success("Product added successfully!", {
+      position: "bottom-right",
+      theme: "dark",
     });
+    // No need to call fetchProducts here; optimistic update is sufficient.  If you DO want to refresh, be careful about infinite loops.
   };
 
-  // Memoize the context value to avoid unnecessary re-renders
   const value = useMemo(
     () => ({
       products,

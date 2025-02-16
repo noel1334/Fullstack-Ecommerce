@@ -28,7 +28,7 @@ const Users = () => {
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 30;
 
   const fetchUsersAndAdmins = async () => {
     setIsLoading(true);

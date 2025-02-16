@@ -5,7 +5,7 @@ import { ShopContext } from "../Context/ShopContext";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { products } = useContext(ShopContext);
+  const { products, currency } = useContext(ShopContext);
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
 
@@ -100,7 +100,8 @@ const ProductDetail = () => {
           {/* Price */}
           <div>
             <p className="text-2xl font-bold text-green-400">
-              ${product.price.toFixed(2)}
+              {currency}
+              {product.price.toFixed(2)}
             </p>
           </div>
 
