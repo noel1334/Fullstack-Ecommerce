@@ -134,7 +134,7 @@ const Orders = () => {
             <div className="flex justify-between items-center">
               <p className="text-lg font-semibold">
                 Total Amount: {currency}
-                {order.totalAmount}
+                {order.totalAmount.toFixed(2)}
               </p>
               <p>Order Status</p>
             </div>
@@ -154,7 +154,7 @@ const Orders = () => {
                   <div className="text-sm text-gray-600">
                     <p>
                       {currency}
-                      {item.price} x {item.quantity}
+                      {item.price.toFixed(2)} x {item.quantity}
                     </p>
                     <p>Size: {item.selectedSize}</p>
                     {/* Dynamically change background color based on the item color */}
