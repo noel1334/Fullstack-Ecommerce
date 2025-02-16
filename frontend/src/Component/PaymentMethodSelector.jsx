@@ -9,24 +9,24 @@ const PaymentMethodSelector = ({ method, setMethod, errors }) => {
           <Title text1={" PAYMENT "} text2={"METHOD"} />
         </div>
         <div className="flex gap-4 flex-col flex-1 lg:flex-row">
-          {/* Monnify Payment Method */}
+          {/* Paystack Payment Method */}
           <div
-            onClick={() => setMethod("monnify")}
+            onClick={() => setMethod("paystack")}
             className={`flex items-center lg:flex-col gap-3 border p-4 rounded-lg cursor-pointer hover:shadow-md transition ${
-              method === "monnify" ? "border-green-500" : "border-gray-300"
+              method === "paystack" ? "border-green-500" : "border-gray-300"
             }`}
           >
             <p
               className={`w-4 h-4 border rounded-full flex-shrink-0 ${
-                method === "monnify" ? "bg-green-500" : ""
+                method === "paystack" ? "bg-green-500" : ""
               }`}
             ></p>
             <img
-              src="/monifyLogo.jpeg"
-              alt="Monnify Logo"
+              src="paystackLogo.png"
+              alt="Paystack Logo"
               className="w-10 h-10 object-contain"
             />
-            <span className="text-sm lg:text-base font-medium">Monnify</span>
+            <span className="text-sm lg:text-base font-medium">Paystack</span>
           </div>
 
           {/* Flutterwave Payment Method */}
@@ -51,25 +51,6 @@ const PaymentMethodSelector = ({ method, setMethod, errors }) => {
             </span>
           </div>
 
-          {/* Paystack Payment Method */}
-          <div
-            onClick={() => setMethod("paystack")}
-            className={`flex items-center lg:flex-col gap-3 border p-4 rounded-lg cursor-pointer hover:shadow-md transition ${
-              method === "paystack" ? "border-green-500" : "border-gray-300"
-            }`}
-          >
-            <p
-              className={`w-4 h-4 border rounded-full flex-shrink-0 ${
-                method === "paystack" ? "bg-green-500" : ""
-              }`}
-            ></p>
-            <img
-              src="paystackLogo.png"
-              alt="Paystack Logo"
-              className="w-10 h-10 object-contain"
-            />
-            <span className="text-sm lg:text-base font-medium">Paystack</span>
-          </div>
           {/* stripe Payment Method */}
           <div
             onClick={() => setMethod("stripe")}
@@ -88,6 +69,25 @@ const PaymentMethodSelector = ({ method, setMethod, errors }) => {
               className="w-10 h-10 object-contain"
             />
             <span className="text-sm lg:text-base font-medium">Stripe</span>
+          </div>
+          {/* Monnify Payment Method */}
+          <div
+            onClick={() => setMethod("monnify")}
+            className={`flex items-center lg:flex-col gap-3 border p-4 rounded-lg cursor-pointer hover:shadow-md transition ${
+              method === "monnify" ? "border-green-500" : "border-gray-300"
+            }`}
+          >
+            <p
+              className={`w-4 h-4 border rounded-full flex-shrink-0 ${
+                method === "monnify" ? "bg-green-500" : ""
+              }`}
+            ></p>
+            <img
+              src="/monifyLogo.jpeg"
+              alt="Monnify Logo"
+              className="w-10 h-10 object-contain"
+            />
+            <span className="text-sm lg:text-base font-medium">Monnify</span>
           </div>
         </div>
 
