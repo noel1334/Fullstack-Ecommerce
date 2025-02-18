@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useMemo } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 
@@ -15,9 +21,9 @@ const ShopContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setIsLoading(true);
-    setError(null); // Clear any previous errors
+    setError(null);
 
     try {
       const [productsResponse, categoriesResponse, subcategoriesResponse] =
@@ -42,11 +48,11 @@ const ShopContextProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const handleProductDelete = async (id) => {
     const originalProducts = [...products]; // Store a copy before optimistic update
@@ -106,11 +112,30 @@ const ShopContextProvider = ({ children }) => {
 
   const handleProductAdd = (newProduct) => {
     setProducts((prevProducts) => [newProduct, ...prevProducts]);
+    setTimeout(() => {
+      fetchProducts();
+    }, 1000);
+
     toast.success("Product added successfully!", {
       position: "bottom-right",
       theme: "dark",
     });
     // No need to call fetchProducts here; optimistic update is sufficient.  If you DO want to refresh, be careful about infinite loops.
+  };
+
+  const handleProductUpdate = (updatedProduct) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product._id === updatedProduct._id ? updatedProduct : product
+      )
+    );
+    setTimeout(() => {
+      fetchProducts();
+    }, 1000);
+    toast.success("Product updated successfully!", {
+      position: "bottom-right",
+      theme: "dark",
+    });
   };
 
   const value = useMemo(
@@ -130,6 +155,7 @@ const ShopContextProvider = ({ children }) => {
       fetchProducts,
       handleProductDelete,
       handleProductAdd,
+      handleProductUpdate,
       handleCategoriesDelete,
     }),
     [products, categories, subcategories, search, showSearch, isLoading, error]

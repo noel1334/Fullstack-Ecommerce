@@ -1,5 +1,4 @@
-// ListProducts.js
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   FaEdit,
@@ -24,6 +23,26 @@ const ListProducts = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
+  const [paginatedProducts, setPaginatedProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  useEffect(() => {
+    const newFilteredProducts = products.filter((product) =>
+      product.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredProducts(newFilteredProducts);
+  }, [products, searchTerm]);
+
+  useEffect(() => {
+    const calculatePaginatation = () => {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const newPaginatedProducts = filteredProducts.slice(start, end);
+      setPaginatedProducts(newPaginatedProducts);
+    };
+
+    calculatePaginatation();
+  }, [currentPage, itemsPerPage, filteredProducts]);
 
   const confirmAndDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
@@ -42,10 +61,6 @@ const ListProducts = () => {
     }, 2000);
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const scrollToTop = () => {
     if (listRef.current) {
       listRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -53,10 +68,6 @@ const ListProducts = () => {
   };
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -127,18 +138,25 @@ const ListProducts = () => {
       )}
 
       <div className="space-y-4">
-        {paginatedProducts.length > 0 ? (
+        {paginatedProducts.length > 0 ? ( // Display only paginated products
           paginatedProducts.map((product) => (
             <div
               key={product._id}
               className="flex items-center bg-gray-800 rounded-lg shadow-lg overflow-hidden"
             >
               <Link to={`/product/${product._id}`}>
-                <img
-                  src={product.image[0]}
-                  alt={product.name}
-                  className="h-24 w-24 object-cover cursor-pointer"
-                />
+                {product.image && product.image.length > 0 ? (
+                  <img
+                    src={product.image[0]}
+                    alt={product.name}
+                    className="h-24 w-24 object-cover cursor-pointer"
+                  />
+                ) : (
+                  <div className="h-24 w-24 bg-gray-700">
+                    {/* Placeholder for missing image */}
+                    No Image
+                  </div>
+                )}
               </Link>
 
               <div className="flex-1 p-4">
@@ -155,18 +173,21 @@ const ListProducts = () => {
                     {product.price}
                   </p>
                   <p className="text-gray-400 text-sm">
-                    <strong>Sizes:</strong> {product.size.join(", ")}
+                    <strong>Sizes:</strong>{" "}
+                    {product.size ? product.size.join(", ") : "N/A"}
                   </p>
                   <p className="text-gray-400 text-sm">
                     <strong>Colors:</strong>{" "}
-                    {product.color.map((color, index) => (
-                      <span
-                        key={index}
-                        className="inline-block w-4 h-4 rounded-full border border-gray-700 ml-1"
-                        style={{ backgroundColor: color }}
-                        title={color}
-                      ></span>
-                    ))}
+                    {product.color
+                      ? product.color.map((color, index) => (
+                          <span
+                            key={index}
+                            className="inline-block w-4 h-4 rounded-full border border-gray-700 ml-1"
+                            style={{ backgroundColor: color }}
+                            title={color}
+                          ></span>
+                        ))
+                      : "N/A"}
                   </p>
                 </div>
               </div>
@@ -201,7 +222,7 @@ const ListProducts = () => {
         )}
       </div>
 
-      {filteredProducts.length > itemsPerPage && (
+      {totalPages > 1 && (
         <div className="flex justify-center mt-4">
           {Array.from({ length: totalPages }, (_, index) => (
             <button

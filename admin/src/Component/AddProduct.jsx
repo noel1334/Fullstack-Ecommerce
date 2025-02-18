@@ -6,7 +6,8 @@ import axiosInstance from "../utils/axiosInstance";
 import { ShopContext } from "../Context/ShopContext";
 
 const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
-  const { handleProductAdd } = useContext(ShopContext);
+  const { handleProductAdd, handleProductUpdate, fetchProducts } =
+    useContext(ShopContext);
   const [formValues, setFormValues] = useState({
     name: "",
     description: "",
@@ -120,25 +121,22 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
     });
 
     try {
+      let response;
       if (productToEdit) {
-        const response = await axiosInstance.put(
+        response = await axiosInstance.put(
           `/products/update/${productToEdit._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        handleProductAdd(response.data);
+        handleProductUpdate(response.data); // Call handleProductUpdate for editing
         toast.success("Product updated successfully!");
         setImagePreviews([]);
       } else {
-        const response = await axiosInstance.post(
-          "/products/create",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
+        response = await axiosInstance.post("/products/create", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         handleProductAdd(response.data);
         toast.success("Product added successfully!", {
           position: "bottom-right",
