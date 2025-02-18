@@ -192,6 +192,7 @@ const AdminOrders = () => {
           <option value="paystack">Paystack</option>
           <option value="monnify">Monnify</option>
           <option value="flutterwave">Flutterwave</option>
+          <option value="stripe">Stripe</option>
         </select>
 
         {/* Status Filter */}

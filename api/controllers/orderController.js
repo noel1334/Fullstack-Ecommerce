@@ -90,7 +90,7 @@ export const completeOrder = async (req, res) => {
       return res.status(404).json({ message: "Stripe session not found." });
     }
 
-    console.log("Retrieved Stripe Session:", session);
+    // console.log("Retrieved Stripe Session:", session);
 
     if (session.payment_status !== "paid") {
       const orderReference = session.metadata.orderReference;
