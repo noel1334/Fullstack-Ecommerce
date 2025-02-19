@@ -24,6 +24,9 @@ console.log("Frontend URLs allowed by CORS:", frontendUrl, clientUrl);
 
 // Initialize app
 const app = express();
+// Serve static files. This may not be needed anymore.
+// app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+// app.use("/uploads", express.static(path.resolve("./uploads")));
 
 // Middlewares
 app.use(cookieParser());

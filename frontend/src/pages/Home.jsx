@@ -6,6 +6,9 @@ import OurPolicy from "../Component/OurPolicy";
 import NewsLetterBox from "../Component/NewsLetterBox";
 
 const Home = () => {
+  const BASE_URL = process.env.REACT_APP_API_URL;
+  console.log("BASE_URL:", BASE_URL);
+
   return (
     <div>
       <Hero />
