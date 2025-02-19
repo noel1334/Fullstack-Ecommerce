@@ -4,9 +4,11 @@ import React, {
   useEffect,
   useMemo,
   useCallback,
+  useContext,
 } from "react";
-import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { UserContext } from "./UserContext";
 
 export const ShopContext = createContext();
 
@@ -20,6 +22,7 @@ const ShopContextProvider = ({ children }) => {
   const [subcategories, setSubcategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { BASE_URL } = useContext(UserContext);
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
@@ -28,9 +31,9 @@ const ShopContextProvider = ({ children }) => {
     try {
       const [productsResponse, categoriesResponse, subcategoriesResponse] =
         await Promise.all([
-          axiosInstance.get("products"),
-          axiosInstance.get("categories"),
-          axiosInstance.get("subcategories"),
+          axios.get(`${BASE_URL}/api/products`),
+          axios.get(`${BASE_URL}/api/categories`),
+          axios.get(`${BASE_URL}/api/subcategories`),
         ]);
 
       const sortedProducts = productsResponse.data
@@ -55,12 +58,12 @@ const ShopContextProvider = ({ children }) => {
   }, [fetchProducts]);
 
   const handleProductDelete = async (id) => {
-    const originalProducts = [...products]; // Store a copy before optimistic update
+    const originalProducts = [...products];
     const updatedProducts = products.filter((product) => product._id !== id);
     setProducts(updatedProducts);
 
     try {
-      await axiosInstance.delete(`products/delete/${id}`);
+      await axios.delete(`${BASE_URL}/api/products/delete/${id}`);
       toast.success("Product deleted successfully!", {
         position: "bottom-right",
         theme: "dark",
@@ -82,14 +85,14 @@ const ShopContextProvider = ({ children }) => {
   };
 
   const handleCategoriesDelete = async (id) => {
-    const originalCategories = [...categories]; // Store a copy before optimistic update
+    const originalCategories = [...categories];
     const updatedCategories = categories.filter(
       (category) => category._id !== id
     );
     setCategories(updatedCategories);
 
     try {
-      await axiosInstance.delete(`categories/delete/${id}`);
+      await axios.delete(`${BASE_URL}/api/categories/delete/${id}`);
       toast.success("Category deleted successfully!", {
         position: "bottom-right",
         theme: "dark",

@@ -4,9 +4,10 @@ import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import CategoryForm from "../Component/CategoryForm";
 import SubcategoryForm from "../Component/SubcategoryForm";
 import { ShopContext } from "../Context/ShopContext";
-import axiosInstance from "../utils/axiosInstance";
+import axios from "axios";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { UserContext } from "../Context/UserContext";
 
 const Categories = () => {
   const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ const Categories = () => {
   const [subcategoryToEdit, setSubcategoryToEdit] = useState(null);
   const { categories, setCategories, handleCategoriesDelete } =
     useContext(ShopContext);
+  const { BASE_URL } = useContext(UserContext);
   const [subcategories, setSubcategories] = useState([]);
   const [categoryToEdit, setCategoryToEdit] = useState(null);
   const listRef = useRef(null);
@@ -34,11 +36,11 @@ const Categories = () => {
   const handleSubCategoriesDelete = async (id) => {
     setLoading(true);
     try {
-      await axiosInstance.delete(`subcategories/delete/${id}`);
+      await axios.delete(`${BASE_URL}/api/subcategories/delete/${id}`);
       // Re-fetch the latest subcategories
       if (selectedCategory) {
-        const response = await axiosInstance.get(
-          `/subcategories/${selectedCategory._id}`
+        const response = await axios.get(
+          `${BASE_URL}/api/subcategories/${selectedCategory._id}`
         );
         setSubcategories(response.data);
       }
@@ -86,8 +88,8 @@ const Categories = () => {
   const handleSubcategoryAdded = async () => {
     if (selectedCategory) {
       try {
-        const response = await axiosInstance.get(
-          `/subcategories/${selectedCategory._id}`
+        const response = await axios.get(
+          `${BASE_URL}/api/subcategories/${selectedCategory._id}`
         );
         setSubcategories(response.data);
       } catch (error) {
@@ -103,8 +105,8 @@ const Categories = () => {
         setSubcategories([]);
         try {
           // Fetch subcategories by category ID
-          const response = await axiosInstance.get(
-            `/subcategories/${selectedCategory._id}`
+          const response = await axios.get(
+            `${BASE_URL}/api/subcategories/${selectedCategory._id}`
           );
           setSubcategories(response.data);
         } catch (error) {

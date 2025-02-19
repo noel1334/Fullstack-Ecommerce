@@ -32,15 +32,15 @@ const Topbar = ({ toggleSidebar }) => {
       setNotifications((prevNotifications) => [
         notification,
         ...prevNotifications,
-      ]); // Add new notification to the list
+      ]);
     });
     socket.on("cancel_order", (notification) => {
       console.log("Received notification:", notification);
-      setNotificationCount((prevCount) => prevCount + 1); // Increment the count
+      setNotificationCount((prevCount) => prevCount + 1);
       setNotifications((prevNotifications) => [
         notification,
         ...prevNotifications,
-      ]); // Add new notification to the list
+      ]);
     });
     socket.on("reject_order", (notification) => {
       console.log("Received notification:", notification);

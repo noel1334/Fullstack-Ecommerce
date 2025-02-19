@@ -4,9 +4,9 @@ import axios from "axios";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  // const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
-  const BASE_URL =
-    process.env.REACT_APP_API_URL || "https://mystore-livid-omega.vercel.app/";
+  const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  // const BASE_URL =
+  //   process.env.REACT_APP_API_URL || "https://mystore-livid-omega.vercel.app/";
 
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(

@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import Title from "./Title";
 import { FaImages } from "react-icons/fa";
 import { toast } from "react-toastify";
-import axiosInstance from "../utils/axiosInstance";
+import axios from "axios";
 import { ShopContext } from "../Context/ShopContext";
+import { UserContext } from "../Context/UserContext";
 
 const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
   const { handleProductAdd, handleProductUpdate, fetchProducts } =
     useContext(ShopContext);
+  const { BASE_URL } = useContext(UserContext);
   const [formValues, setFormValues] = useState({
     name: "",
     description: "",
@@ -29,7 +31,7 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axiosInstance.get("/categories");
+        const response = await axios.get(`${BASE_URL}/api/categories`);
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -75,8 +77,8 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
     setFormValues({ ...formValues, category: categoryId, subcategory: "" });
     if (categoryId) {
       try {
-        const response = await axiosInstance.get(
-          `/subcategories/${categoryId}`
+        const response = await axios.get(
+          `${BASE_URL}/api/subcategories/${categoryId}`
         );
         setSubcategories(response.data);
       } catch (error) {
@@ -123,8 +125,8 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
     try {
       let response;
       if (productToEdit) {
-        response = await axiosInstance.put(
-          `/products/update/${productToEdit._id}`,
+        response = await axios.put(
+          `${BASE_URL}/api/products/update/${productToEdit._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -134,9 +136,13 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
         toast.success("Product updated successfully!");
         setImagePreviews([]);
       } else {
-        response = await axiosInstance.post("/products/create", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        response = await axios.post(
+          `${BASE_URL}/api/products/create`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
         handleProductAdd(response.data);
         toast.success("Product added successfully!", {
           position: "bottom-right",

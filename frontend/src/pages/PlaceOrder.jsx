@@ -5,7 +5,6 @@ import Title from "../Component/Title";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../Context/CartContext";
 import { UserContext } from "../Context/UserContext";
-import axiosInstance from "../utils/axiosInstance";
 import { toast } from "react-toastify";
 import PaystackPop from "@paystack/inline-js";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
@@ -42,8 +41,8 @@ const PlaceOrder = () => {
   useEffect(() => {
     const fetchShippingDetails = async () => {
       try {
-        const response = await axiosInstance.get(
-          `/auth/address/${currentUser.id}`
+        const response = await axios.get(
+          `${BASE_URL}/api/auth/address/${currentUser.id}`
         );
 
         if (response.status === 200 && response.data?.address?.addresses) {
@@ -105,9 +104,13 @@ const PlaceOrder = () => {
           userId: currentUser.id,
           address: fullAddress,
         };
-        const response = await axiosInstance.put("/auth/saveAddress", payload, {
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await axios.put(
+          `${BASE_URL}/api/auth/saveAddress`,
+          payload,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
         if (response.status === 200) {
           toast.success("Shipping address updated successfully!");

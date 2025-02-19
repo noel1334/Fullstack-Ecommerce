@@ -1,5 +1,12 @@
-import React, { createContext, useState, useEffect, useMemo } from "react";
-import axiosInstance from "../utils/axiosInstance";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useMemo,
+  useContext,
+} from "react";
+import { UserContext } from "./UserContext";
+import axios from "axios";
 
 export const ShopContext = createContext();
 
@@ -13,15 +20,16 @@ const ShopContextProvider = ({ children }) => {
   const [subcategories, setSubcategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { BASE_URL } = useContext(UserContext);
 
   // Fetch products, categories, and subcategories
   const fetchProducts = async () => {
     try {
       const [productsResponse, categoriesResponse, subcategoriesResponse] =
         await Promise.all([
-          axiosInstance.get("products"),
-          axiosInstance.get("categories"),
-          axiosInstance.get("subcategories"),
+          axios.get(`${BASE_URL}/api/products`),
+          axios.get(`${BASE_URL}/api/categories`),
+          axios.get(`${BASE_URL}/api/subcategories`),
         ]);
 
       // Sort products by createdAt in descending order (most recent first)
@@ -52,7 +60,7 @@ const ShopContextProvider = ({ children }) => {
     setProducts(updatedProducts);
 
     try {
-      await axiosInstance.delete(`products/delete/${id}`);
+      await axios.delete(`${BASE_URL}/api/products/delete/${id}`);
     } catch (err) {
       console.error(
         "Error deleting product:",
@@ -75,7 +83,7 @@ const ShopContextProvider = ({ children }) => {
     setCategories(updatedCategories);
 
     try {
-      await axiosInstance.delete(`categories/delete/${id}`);
+      await axios.delete(`${BASE_URL}/api/categories/delete/${id}`);
     } catch (err) {
       console.error(
         "Error deleting product:",
