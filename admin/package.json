@@ -27,6 +27,7 @@
     "react-toastify": "^10.0.6",
     "recharts": "^2.15.0",
     "sass": "^1.74.1",
+    "socket.io-client": "^4.8.1",
     "swapper": "^1.1.6",
     "swiper": "^11.1.15",
     "web-vitals": "^2.1.4"
