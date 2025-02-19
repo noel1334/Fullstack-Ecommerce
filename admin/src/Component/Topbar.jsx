@@ -2,14 +2,14 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { FaBars, FaSignOutAlt, FaBell } from "react-icons/fa";
 import { UserContext } from "../Context/UserContext";
 import { io } from "socket.io-client";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
 
 const Topbar = ({ toggleSidebar }) => {
   const { userData, logout, BASE_URL } = useContext(UserContext);
   const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
-  const [isOpen, setIsOpen] = useState(false); // State to control dropdown visibility
-  const dropdownRef = useRef(null); // Ref for the dropdown element
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const socket = io(BASE_URL);

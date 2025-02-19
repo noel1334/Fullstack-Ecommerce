@@ -24,7 +24,7 @@ function initializeSocket(server) {
 
 function sendNotification(notification) {
   if (io) {
-    io.emit("new_notification", notification); // Broadcast to all connected clients
+    io.emit("new_notification", notification);
     console.log("Notification sent:", notification);
   } else {
     console.error(
