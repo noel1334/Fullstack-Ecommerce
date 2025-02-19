@@ -519,7 +519,7 @@ export const updateAcceptedOrder = async (req, res) => {
         sendNotification({
             type: "accept_order",
             message: ` Order Accepted! Order ID: ${order._id}`,
-            orderId: order._id.toString(), // Ensure it's a string
+            orderId: order._id.toString(), 
         });
 
         res.status(200).json({ message: "Order accepted successfully.", order });

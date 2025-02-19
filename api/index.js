@@ -37,6 +37,10 @@ app.use(
   })
 );
 
+app.get("/", (req, res) => {
+    res.send("api work");
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
