@@ -1,23 +1,32 @@
 import Product from '../models/Product.js';
 import mongoose from 'mongoose';
 import axios from 'axios';
-import fs from 'fs';
 import FormData from 'form-data';
+import multer from 'multer';
+import path from 'path'; // Import the 'path' module
 
 const imgbbApiKey = process.env.IMGBB_API_KEY;
 
-// Utility function to upload an image to ImgBB
-const uploadImageToImgBB = async (imagePath) => {
+// Multer configuration that uses memory storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// Utility function to upload an image to ImgBB from a buffer
+const uploadImageToImgBBFromBuffer = async (fileBuffer, originalFilename) => {
     try {
+        // Extract the file extension from the original filename
+        const fileExtension = path.extname(originalFilename);
+        const filenameForUpload = `image${fileExtension}`;
+
         const formData = new FormData();
-        formData.append('image', fs.createReadStream(imagePath));
+        formData.append('image', fileBuffer, { filename: filenameForUpload }); 
 
         const response = await axios.post(
             `https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
             formData,
             {
                 headers: {
-                    ...formData.getHeaders(), 
+                    ...formData.getHeaders(),
                 },
             }
         );
@@ -55,21 +64,12 @@ export const createProduct = async (req, res) => {
         // Process all uploaded images
         for (const imageFile of imageFiles) {
             try {
-                const imageUrl = await uploadImageToImgBB(imageFile.path);
+                // Upload from buffer - Pass original filename
+                const imageUrl = await uploadImageToImgBBFromBuffer(imageFile.buffer, imageFile.originalname);
                 imageUrls.push(imageUrl);
-
-                // Delete the local file after successful upload
-                fs.unlink(imageFile.path, (err) => {
-                    if (err) {
-                        console.error(`Failed to delete local file ${imageFile.path}:`, err);
-                    } else {
-                        console.log(`Local file ${imageFile.path} deleted`);
-                    }
-                });
 
             } catch (uploadError) {
                 console.error('Failed to upload one of the images:', uploadError);
-                // For now, let's send an error and exit
                 return res.status(500).json({ message: 'Failed to upload one or more images' });
             }
         }
@@ -91,20 +91,9 @@ export const createProduct = async (req, res) => {
 
     } catch (error) {
         console.error(`Error creating product: ${error.message}`);
-
-        // Delete the uploaded images if product creation fails
-        if (req.files?.image) {
-            req.files.image.forEach(file => {
-                fs.unlink(file.path, (err) => {
-                    if (err) console.error(`Failed to delete ${file.path} after error:`, err);
-                });
-            });
-        }
-
         res.status(500).json({ message: 'Server error' });
     }
 };
-
 
 export const getProducts = async (req, res) => {
     try {
@@ -167,16 +156,8 @@ export const updateProduct = async (req, res) => {
         // Process all uploaded images
         for (const imageFile of imageFiles) {
             try {
-                const imageUrl = await uploadImageToImgBB(imageFile.path);
+                const imageUrl = await uploadImageToImgBBFromBuffer(imageFile.buffer, imageFile.originalname);
                 imageUrls.push(imageUrl);
-
-                fs.unlink(imageFile.path, (err) => {
-                    if (err) {
-                        console.error(`Failed to delete local file ${imageFile.path}:`, err);
-                    } else {
-                        console.log(`Local file ${imageFile.path} deleted`);
-                    }
-                });
 
             } catch (uploadError) {
                 console.error('Failed to upload one of the images:', uploadError);
@@ -201,15 +182,6 @@ export const updateProduct = async (req, res) => {
         res.json({ message: 'Product updated successfully', product: updatedProduct });
     } catch (error) {
         console.error(`Error updating product: ${error.message}`);
-
-        if (req.files?.image) {
-            req.files.image.forEach(file => {
-                fs.unlink(file.path, (err) => {
-                    if (err) console.error(`Failed to delete ${file.path} after error:`, err);
-                });
-            });
-        }
-
         res.status(500).json({ message: 'Server error' });
     }
 };

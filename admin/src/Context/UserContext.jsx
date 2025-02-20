@@ -4,9 +4,9 @@ import axios from "axios";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  // const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:5000";
-  const BASE_URL =
-    process.env.REACT_APP_API_URL || "https://mystore-api-98v8.onrender.com";
+  const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:5000";
+  // const BASE_URL =
+  //   process.env.REACT_APP_API_URL || "https://mystore-api-98v8.onrender.com";
 
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(
