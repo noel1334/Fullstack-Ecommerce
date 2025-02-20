@@ -2,34 +2,25 @@ import Product from '../models/Product.js';
 import mongoose from 'mongoose';
 import axios from 'axios';
 import fs from 'fs';
-
+import FormData from 'form-data';
 
 const imgbbApiKey = process.env.IMGBB_API_KEY;
 
 // Utility function to upload an image to ImgBB
 const uploadImageToImgBB = async (imagePath) => {
     try {
-        // console.log(`Attempting to upload image from: ${imagePath}`);
-
-        // Read the file data into a Buffer
-        const imageBuffer = fs.readFileSync(imagePath);
-
         const formData = new FormData();
-        formData.append('image', new Blob([imageBuffer]));
-
-        // console.log('FormData contents:', formData); 
+        formData.append('image', fs.createReadStream(imagePath));
 
         const response = await axios.post(
             `https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
             formData,
             {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    ...formData.getHeaders(), 
                 },
             }
         );
-
-        // console.log('ImgBB API Response:', response.data);
 
         if (response.data && response.data.success) {
             return response.data.data.url;
@@ -48,7 +39,6 @@ export const createProduct = async (req, res) => {
     try {
         const { name, description, price, category, subcategory, size, color, bestSeller } = req.body;
 
-        // Parse size and color into arrays if they are strings
         const parsedSize = Array.isArray(size) ? size : size?.split(',').map(s => s.trim());
         const parsedColor = Array.isArray(color) ? color : color?.split(',').map(c => c.trim());
 
