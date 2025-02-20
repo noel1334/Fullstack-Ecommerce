@@ -74,7 +74,7 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
   // Handle category change to update subcategories
   const handleCategoryChange = async (e) => {
     const categoryId = e.target.value;
-    setFormValues({ ...formValues, category: categoryId, subcategory: "" });
+    setFormValues({ ...formValues, category: categoryId, subcategory: "" }); // Reset subcategory
     if (categoryId) {
       try {
         const response = await axios.get(
@@ -84,6 +84,8 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
       } catch (error) {
         console.error("Error fetching subcategories:", error);
       }
+    } else {
+      setSubcategories([]); // Clear subcategories if no category selected
     }
   };
 
@@ -132,7 +134,7 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        handleProductUpdate(response.data); // Call handleProductUpdate for editing
+        handleProductUpdate(response.data);
         toast.success("Product updated successfully!");
         setImagePreviews([]);
       } else {
@@ -244,8 +246,8 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
         </div>
 
         {/* Category and Subcategory in horizontal layout */}
-        <div className="flex space-x-4">
-          <div className="w-1/2">
+        <div className="flex flex-col md:flex-row space-x-0 md:space-x-4">
+          <div className="mb-4 md:mb-0 md:w-1/2">
             <label
               htmlFor="category"
               className="block font-medium mb-2 cursor-pointer"
@@ -274,7 +276,7 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
               ))}
             </select>
           </div>
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <label
               htmlFor="subcategory"
               className="block font-medium mb-2 cursor-pointer"
@@ -284,18 +286,13 @@ const AddProduct = ({ productToEdit, setProductToEdit, handleClose }) => {
             <select
               id="subcategory"
               name="subcategory"
-              value={formValues.category || productToEdit?.subcategory?._id}
+              value={formValues.subcategory || productToEdit?.subcategory?._id}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-800 text-white"
               disabled={!formValues.category}
             >
-              {productToEdit ? (
-                <option value={productToEdit.subcategory._id}>
-                  {productToEdit.subcategory.name}
-                </option>
-              ) : (
-                <option value="">Select a subcategory</option>
-              )}
+              <option value="">Select a subcategory</option>{" "}
+              {/* Ensures the default state is correct */}
               {subcategories.map((subcategory) => (
                 <option key={subcategory._id} value={subcategory._id}>
                   {subcategory.name}

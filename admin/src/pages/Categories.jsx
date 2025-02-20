@@ -132,7 +132,7 @@ const Categories = () => {
           <input
             type="text"
             placeholder="Search Categories"
-            className="flex-grow p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300"
+            className="flex-grow p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300 sm:w-48" // ADD sm:w-48 or another width
             value={categorySearchTerm}
             onChange={(e) => setCategorySearchTerm(e.target.value)}
           />
@@ -213,7 +213,7 @@ const Categories = () => {
           <input
             type="text"
             placeholder="Search Subcategories"
-            className="flex-grow p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300"
+            className="flex-grow p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300 sm:w-48" // ADD sm:w-48 or another width
             value={subcategorySearchTerm}
             onChange={(e) => setSubcategorySearchTerm(e.target.value)}
           />

@@ -83,8 +83,11 @@ const Reports = () => {
 
       {/* Filter Section */}
       <div className="bg-white dark:bg-gray-900 shadow-lg p-4 rounded-md mb-6">
+        {/* flex-wrap allows items to wrap on smaller screens */}
         <div className="flex flex-wrap gap-4">
-          <div className="flex items-center gap-2 flex-grow">
+          <div className="flex items-center gap-2 flex-grow sm:w-auto w-full">
+            {" "}
+            {/* Added sm:w-auto and w-full */}
             <AiOutlineSearch className="text-gray-600 dark:text-gray-300" />
             <input
               type="text"
@@ -94,10 +97,10 @@ const Reports = () => {
               onChange={(e) => setFilterTerm(e.target.value)}
             />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:w-auto w-full">
             <AiOutlineFilter className="text-gray-600 dark:text-gray-300" />
             <select
-              className="p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300"
+              className="p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300 w-full"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -109,17 +112,17 @@ const Reports = () => {
               <option value="Marketing">Marketing</option>
             </select>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-center gap-2 sm:w-auto md:flex-row w-full">
             <input
               type="date"
-              className="p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300"
+              className="p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300 w-full"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
             />
             <span className="text-gray-600 dark:text-gray-300">to</span>
             <input
               type="date"
-              className="p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300"
+              className="p-2 border rounded-md dark:bg-gray-700 dark:text-gray-300 w-full"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />

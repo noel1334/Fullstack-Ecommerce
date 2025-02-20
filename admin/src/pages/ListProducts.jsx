@@ -95,7 +95,7 @@ const ListProducts = () => {
         {!showAddProduct && <Title text1={"PRODUCT"} text2={"LIST"} />}
       </div>
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between gap-8 items-center mb-6">
         <div className="relative w-72">
           <FaSearch className="absolute top-2 left-2 text-gray-500" />
           <input
